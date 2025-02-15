@@ -33,25 +33,27 @@ def webServer(port=13331):
             # Fill in start
             header = "HTTP/1.1 200 OK\r\n"
             header += "Content-Type: text/html; charset=UTF-8\r\n"
+            header += "Server: MyServer/1.0.0\r\n"
             header += "Connection: close\r\n"
-            outputdata = header.encode() + f.read()
+
 
             # Content-Type is an example on how to send a header as bytes. There are more!
-            # outputdata=b"Content-Type: text/html; charset=UTF-8\r\n"
+            outputdata=b""
 
             # Note that a complete header must end with a blank line, creating the four-byte sequence "\r\n\r\n" Refer to https://w3.cs.jmu.edu/kirkpams/OpenCSF/Books/csf/html/TCPSockets.html
 
             # Fill in end
 
             for i in f:  # for line in file
-            # Fill in start - append your html file contents #Fill in end
+                # Fill in start - append your html file contents #Fill in end
                 outputdata += i
             # Send the content of the requested file to the client (don't forget the headers you created)!
             # Send everything as one send command, do not send one line/item at a time!
 
             # Fill in start
-            connectionSocket.send( outputdata)
-
+            header += "Content-Length: " + str(len(outputdata)) + "\r\n"
+            header += "\r\n"
+            connectionSocket.send(header.encode() + outputdata)
             f.close()
             # Fill in end
 
@@ -63,6 +65,7 @@ def webServer(port=13331):
             # Fill in start
             error_message = "HTTP/1.1 404 Not Found\r\n"
             error_message += "Content-Type: text/html; charset=UTF-8\r\n"
+            error_message += "Server: MyServer/1.0.0\r\n"
             error_message += "Connection: close\r\n"
             error_message += "\r\n"
             error_body = "<html><head><title>404 Not Found</title></head><body><center><h1>404 Not Found</h1></center></body></html>"
